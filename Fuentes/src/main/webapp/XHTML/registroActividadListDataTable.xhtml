@@ -1,0 +1,157 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	</h:head>
+
+	<h:body>
+		  <ui:composition template="/WEB-INF/facelets/template.xhtml">	
+		 
+		 	<ui:define name="body">	
+				<f:view>
+					<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>               
+					<p:dialog modal="true" widgetVar="statusDialog" header="Loading"  draggable="false" closable="false">  
+   						<p:graphicImage value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />   
+					</p:dialog>
+					
+					<!-- Expired session -->
+					<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();" timeout="#{session.maxInactiveInterval * 1000}" />
+					<p:dialog modal="true" widgetVar="sessionTimeOutDialog" header="Expired session"  draggable="false" closable="false">  
+	   					<h:outputText value="The session is finished" />
+	                 	<input id="confirmBackToLogin" 
+	                 		type="button" 
+	                 		value="Sign in"
+	                    	onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />   
+					</p:dialog>
+					
+		  			<h:form id="frm">								  		
+						
+						<p:panel id="panelDataTableRegistroActividad" header="RegistroActividadData">
+							<p:growl id="men"/>				
+							<p:dataTable value="#{registroActividadView.data}" var="registroActividad"
+								paginator="true" rows="5">
+																										<p:column filterBy="#{registroActividad.regiId}" sortBy="#{registroActividad.regiId}" >
+										 <f:facet name="header">
+										<h:outputText value="regiId"/>
+										</f:facet>
+										 <h:outputText value="#{registroActividad.regiId}"/>
+										 </p:column>
+			                    																									
+										<p:column filterBy="#{registroActividad.fechaCreacion}" sortBy="#{registroActividad.fechaCreacion}" >
+										 <f:facet name="header">
+										<h:outputText value="FechaCreacion"/>
+										</f:facet>
+										 <h:outputText value="#{registroActividad.fechaCreacion}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{registroActividad.fechaRegistro}" sortBy="#{registroActividad.fechaRegistro}" >
+										 <f:facet name="header">
+										<h:outputText value="FechaRegistro"/>
+										</f:facet>
+										 <h:outputText value="#{registroActividad.fechaRegistro}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{registroActividad.tiempoHoras}" sortBy="#{registroActividad.tiempoHoras}" >
+										 <f:facet name="header">
+										<h:outputText value="TiempoHoras"/>
+										</f:facet>
+										 <h:outputText value="#{registroActividad.tiempoHoras}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{registroActividad.tiempoMin}" sortBy="#{registroActividad.tiempoMin}" >
+										 <f:facet name="header">
+										<h:outputText value="TiempoMin"/>
+										</f:facet>
+										 <h:outputText value="#{registroActividad.tiempoMin}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{registroActividad.actiId_Actividad}" sortBy="#{registroActividad.actiId_Actividad}" >
+										 <f:facet name="header">
+										<h:outputText value="ActiId_Actividad"/>
+										</f:facet>
+										 <h:outputText value="#{registroActividad.actiId_Actividad}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{registroActividad.usuaId_Usuario}" sortBy="#{registroActividad.usuaId_Usuario}" >
+										 <f:facet name="header">
+										<h:outputText value="UsuaId_Usuario"/>
+										</f:facet>
+										 <h:outputText value="#{registroActividad.usuaId_Usuario}"/>
+										</p:column>   
+			                    			                    
+								<p:column headerText="Options">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogRegistroActividad"
+										actionListener="#{registroActividadView.action_edit}">
+										<f:attribute name="selectedRegistroActividad" value="#{registroActividad}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"									
+										title="Delete" actionListener="#{registroActividadView.action_delete_datatable}"
+										onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
+										icon="ui-icon-trash" update="@form">
+										<f:attribute name="selectedRegistroActividad" value="#{registroActividad}" />
+									</p:commandButton>
+								</p:column>									                    
+							</p:dataTable>	
+						</p:panel>
+						<p:panel id="panelBoton">
+							<div align="center">
+								<p:commandButton id="btnNew" value="New"
+									action="#{registroActividadView.action_new()}" update=":dialogRegistroActividad" />
+							</div>
+						</p:panel>						
+		   			</h:form>
+					<p:dialog id="dialogRegistroActividad" appendTo="@(body)" draggable="true"
+						closable="false" visible="#{registroActividadView.showDialog}" resizable="false"
+						modal="true" width="500">
+						<h:form id="formDialog">
+							<p:messages id="msg" />
+							<p:panel id="panelRegistroActividad" header="RegistroActividad">							
+							    <h:panelGrid columns="2" id="panelGrid" >
+																		 <h:outputText id="msgRegiId" value="RegiId"/>
+									 <p:inputText id="txtRegiId" binding="#{registroActividadView.txtRegiId}">
+									 <p:ajax update=":dialogRegistroActividad" listener="#{registroActividadView.listener_txtId}"/>
+									 </p:inputText>	
+																											
+																		<h:outputText id="msgTiempoMin" value=" TiempoMin"/>
+									<p:inputText id="txtTiempoMin" disabled="true" binding="#{registroActividadView.txtTiempoMin}"/>
+																		<h:outputText id="msgActiId_Actividad" value=" ActiId_Actividad"/>
+									<p:inputText id="txtActiId_Actividad" disabled="true" binding="#{registroActividadView.txtActiId_Actividad}"/>
+																		<h:outputText id="msgUsuaId_Usuario" value=" UsuaId_Usuario"/>
+									<p:inputText id="txtUsuaId_Usuario" disabled="true" binding="#{registroActividadView.txtUsuaId_Usuario}"/>
+																		
+																													<h:outputText id="msgFechaCreacion" value=" FechaCreacion"/>
+																				<p:calendar showOn="button" navigator="true" locale="en" 
+										binding="#{registroActividadView.txtFechaCreacion}" >
+										<p:ajax event="dateSelect" listener="#{registroActividadView.listener_txtFechaCreacion}" />
+										</p:calendar>
+																				<h:outputText id="msgFechaRegistro" value=" FechaRegistro"/>
+																				<p:calendar showOn="button" navigator="true" locale="en" 
+										binding="#{registroActividadView.txtFechaRegistro}" >
+										<p:ajax event="dateSelect" listener="#{registroActividadView.listener_txtFechaRegistro}" />
+										</p:calendar>
+																				<h:outputText id="msgTiempoHoras" value=" TiempoHoras"/>
+																				<p:calendar showOn="button" navigator="true" locale="en" 
+										binding="#{registroActividadView.txtTiempoHoras}" >
+										<p:ajax event="dateSelect" listener="#{registroActividadView.listener_txtTiempoHoras}" />
+										</p:calendar>
+																										    </h:panelGrid>
+							</p:panel>						   
+							<p:panel id="panelBotones">
+								<div align="center">					
+									<p:commandButton id="btnSave" binding="#{registroActividadView.btnSave}" value="Save" action="#{registroActividadView.action_save()}" update=":dialogRegistroActividad :frm:panelDataTableRegistroActividad" />
+									<p:commandButton id="btnClear" value="Clear" action="#{registroActividadView.action_clear()}" update=":dialogRegistroActividad" />
+									<p:commandButton id="btnExit" value="Exit" action="#{registroActividadView.action_closeDialog()}" update=":dialogRegistroActividad" />
+								</div>
+							</p:panel>					
+						</h:form>
+					</p:dialog>
+				</f:view>
+			</ui:define>		
+		</ui:composition>	
+	</h:body>	
+</html>	

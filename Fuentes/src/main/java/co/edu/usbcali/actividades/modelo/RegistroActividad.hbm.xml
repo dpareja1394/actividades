@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 15/08/2016 09:18:31 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.edu.usbcali.actividades.modelo.RegistroActividad" table="registro_actividad" schema="public">
+        <id name="regiId" type="java.lang.Integer">
+            <column name="regi_id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="actividad" class="co.edu.usbcali.actividades.modelo.Actividad" fetch="select">
+            <column name="acti_id" />
+        </many-to-one>
+        <many-to-one name="usuario" class="co.edu.usbcali.actividades.modelo.Usuario" fetch="select">
+            <column name="usua_id" />
+        </many-to-one>
+        <property name="tiempoMin" type="java.lang.Long">
+            <column name="tiempo_min" not-null="true" />
+        </property>
+        <property name="tiempoHoras" type="java.util.Date">
+            <column name="tiempo_horas" length="15" not-null="true" />
+        </property>
+        <property name="fechaRegistro" type="java.util.Date">
+            <column name="fecha_registro" length="13" not-null="true" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="13" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

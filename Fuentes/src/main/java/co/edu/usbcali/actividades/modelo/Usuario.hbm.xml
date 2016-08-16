@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 15/08/2016 09:18:31 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.edu.usbcali.actividades.modelo.Usuario" table="usuario" schema="public">
+        <id name="usuaId" type="java.lang.Integer">
+            <column name="usua_id" />
+            <generator class="assigned" />
+        </id>
+        <property name="nombreCompleto" type="java.lang.String">
+            <column name="nombre_completo" length="200" not-null="true" />
+        </property>
+        <property name="email" type="java.lang.String">
+            <column name="email" length="200" not-null="true" />
+        </property>
+        <property name="password" type="java.lang.String">
+            <column name="password" length="10" not-null="true" />
+        </property>
+        <property name="numDocumento" type="java.lang.String">
+            <column name="num_documento" length="15" not-null="true" />
+        </property>
+        <set name="registroActividads" table="registro_actividad" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="usua_id" />
+            </key>
+            <one-to-many class="co.edu.usbcali.actividades.modelo.RegistroActividad" />
+        </set>
+    </class>
+</hibernate-mapping>
